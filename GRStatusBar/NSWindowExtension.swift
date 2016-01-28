@@ -10,8 +10,12 @@ import Cocoa
 
 private var _NSWindowStatusBarAssociatedObjectKey = UnsafePointer<Void>()
 
+/// This extension adds the statusBar property to every NSWindow instance
+///
+/// A `GRStatusBar` is automatically initialized and associated with the window the first time the property is accessed
 public extension NSWindow {
 
+    /// The window's status bar
     public var statusBar: GRStatusBar {
         get {
             if let existingBar = objc_getAssociatedObject(self, _NSWindowStatusBarAssociatedObjectKey) as? GRStatusBar {

@@ -8,8 +8,12 @@
 
 import Cocoa
 
+/// Manages a status bar associated with a particular window
+///
+/// The status bar is a thin translucent bar displayed on be bottom-left of the window
 @objc public class GRStatusBar: NSObject {
 
+    /// The style used for the status bar vibrancy (Light or Dark)
     public var style = GRStatusBarStyle.Light {
         didSet {
             guard backgroundView != nil else { return }

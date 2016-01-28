@@ -8,11 +8,11 @@
 
 import Cocoa
 
-/// GRStatusBarStyle
-/// * Light - For light windows
-/// * Dark - For dark windows
+/// Defines the style of vibrancy to be used by a `GRStatusBar`
 public enum GRStatusBarStyle: String {
+    /// Uses the vibrant light appearance and material
     case Light
+    /// Uses the vibrant dark appearance and material
     case Dark
     
     /// Gets the most appropriate style based on the appearance provided
