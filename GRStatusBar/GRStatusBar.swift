@@ -79,10 +79,13 @@ import Cocoa
     private var backgroundView: NSVisualEffectView!
     private var label: NSTextField!
     
+    private let windowContentViewObserverContext = UnsafeMutablePointer<Void>()
     init(window: NSWindow) {
         self.window = window
 
         super.init()
+        
+        self.window.addObserver(self, forKeyPath: "contentView", options: [.Initial, .New], context: windowContentViewObserverContext)
         
         fixContentViewIfNeeded()
         buildViews()
@@ -93,6 +96,8 @@ import Cocoa
     /// If no duration is specified, the status bar is shown for the duration specified in `displayTime`.
     /// If the duration specified is `zero`, the status bar is shown until `hide()` is called manually
     public func show(forDuration duration: Double? = nil) {
+        bringToFront()
+        
         let duration = duration ?? self.displayTime
         
         isVisible = true
@@ -127,8 +132,8 @@ import Cocoa
         contentView.wantsLayer = true
         print("[GRStatusBar] WARNING: Window contentView must have wantsLayer = true")
     }
-    
-    private func buildViews() {        
+
+    private func buildViews() {
         let defaultRect = NSMakeRect(0, 0, LayoutConstants.defaultWidth, LayoutConstants.defaultHeight)
 
         // Container View
@@ -202,23 +207,46 @@ import Cocoa
         labelCenterAnchor.constant = LayoutConstants.textYOffset
         labelCenterAnchor.active = true
         
-        // Add everything to the window
+        // Start with the container hidden
+        containerView.alphaValue = 0.0
+        
         if let contentView = window.contentView {
             // Start with the best style for the contentView's appearance
             style = GRStatusBarStyle(appearance: contentView.appearance)
-            
-            // Start with the container hidden
-            containerView.alphaValue = 0.0
-            
-            contentView.addSubview(containerView, positioned: .Above, relativeTo: contentView.subviews.last)
-            
-            let leadingConstraint = containerView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor)
-            leadingConstraint.constant = LayoutConstants.margin
-            leadingConstraint.active = true
-            let bottomConstraint = containerView.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor)
-            bottomConstraint.constant = -LayoutConstants.margin
-            bottomConstraint.active = true
         }
+        
+        bringToFront()
+    }
+    
+    private func bringToFront() {
+        guard containerView != nil else { return }
+
+        if containerView.superview != nil {
+            containerView.removeFromSuperview()
+        }
+        
+        guard let contentView = window.contentView else { return }
+        
+        contentView.addSubview(containerView)
+        
+        let leadingConstraint = containerView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor)
+        leadingConstraint.constant = LayoutConstants.margin
+        leadingConstraint.active = true
+        let bottomConstraint = containerView.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor)
+        bottomConstraint.constant = -LayoutConstants.margin
+        bottomConstraint.active = true
+    }
+    
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if context == windowContentViewObserverContext {
+            bringToFront()
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
+    
+    deinit {
+        window.removeObserver(self, forKeyPath: "contentView", context: windowContentViewObserverContext)
     }
 
 }
