@@ -115,14 +115,23 @@ import Cocoa
         }
     }
     
-    /// Hides the status bar
-    public func hide() {
-        isVisible = false
+    /// Hides the status bar after the specified delay
+    ///
+    /// If no delay is specified, the status bar is hidden immediately
+    public func hide(afterDelay delay: Double? = 0.0) {
+        let hideBlock = {
+            self.isVisible = false
+            
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.4
+                self.containerView.animator().alphaValue = 0.0
+            }, completionHandler: nil)
+        }
         
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = 0.4
-            self.containerView.animator().alphaValue = 0.0
-        }, completionHandler: nil)
+        guard let delay = delay else { return hideBlock() }
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue(), hideBlock)
     }
     
     private func fixContentViewIfNeeded() {
