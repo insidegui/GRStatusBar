@@ -26,7 +26,11 @@ import Cocoa
     }
     
     /// The color for the text (if you want to customize other text properties, use `attributedText`)
-    public var textColor: NSColor? = LayoutConstants.defaultTextColor
+    public var textColor: NSColor? = LayoutConstants.defaultTextColor {
+        didSet {
+            label.textColor = textColor ?? LayoutConstants.defaultTextColor
+        }
+    }
     
     /// The text to display in the status bar (if you want to customize text properties, set `attributedText` instead)
     ///
