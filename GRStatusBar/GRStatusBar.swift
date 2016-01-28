@@ -198,7 +198,10 @@ import Cocoa
         if let contentView = window.contentView {
             // Start with the best style for the contentView's appearance
             style = GRStatusBarStyle(appearance: contentView.appearance)
-
+            
+            // Start with the container hidden
+            containerView.alphaValue = 0.0
+            
             contentView.addSubview(containerView, positioned: .Above, relativeTo: contentView.subviews.last)
             
             let leadingConstraint = containerView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor)
