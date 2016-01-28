@@ -6,6 +6,8 @@ This adds a `statusBar` property to NSWindow, the easiest way to show a status m
 
 [See demo app to learn more](https://github.com/insidegui/GRStatusBarDemo).
 
+[Read the docs](http://cocoadocs.org/docsets/GRStatusBar).
+
 ![screenshot](https://raw.githubusercontent.com/insidegui/GRStatusBar/master/screenshot.png)
 
 ## Installing
