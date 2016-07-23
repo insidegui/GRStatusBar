@@ -12,6 +12,10 @@ This adds a `statusBar` property to NSWindow, the easiest way to show a status m
 
 ## Installing
 
+### IMPORTANT: If you're using Swift 3 
+
+Checkout the branch `swift3` if you're using Xcode 8 and Swift 3 on your project, this branch will be merged into master when Xcode 8 comes out of beta.
+
 ### Using CocoaPods:
 
 Add a `Podfile` that contains at least the following information to the root of your app project, then do `pod install`.
