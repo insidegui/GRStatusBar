@@ -14,7 +14,7 @@ import Cocoa
 @objc public class GRStatusBar: NSObject {
 
     /// The style used for the status bar vibrancy (Light or Dark)
-    public var style = GRStatusBarStyle.Light {
+    public var style = GRStatusBarStyle.light {
         didSet {
             guard backgroundView != nil else { return }
             
@@ -54,9 +54,9 @@ import Cocoa
     /// The attributed text to display in the status bar
     ///
     /// *The status bar is automatically shown for `displayTime` seconds when this property is changed, unless It is set to nil*
-    public var attributedText: AttributedString? {
+    public var attributedText: NSAttributedString? {
         didSet {
-            label.attributedStringValue = attributedText ?? AttributedString()
+            label.attributedStringValue = attributedText ?? NSAttributedString()
             
             if attributedText != nil {
                 show()
@@ -79,7 +79,7 @@ import Cocoa
     private var backgroundView: NSVisualEffectView!
     private var label: NSTextField!
     
-    private let windowContentViewObserverContext: UnsafeMutablePointer<Void>? = nil
+    private let windowContentViewObserverContext: UnsafeMutableRawPointer? = nil
     init(window: NSWindow) {
         self.window = window
 
@@ -109,7 +109,7 @@ import Cocoa
             guard duration > 0.0 else { return }
             
             let delayTime = DispatchTime.now() + Double(Int64(duration * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.after(when: delayTime) {
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
                 self.hide()
             }
         }
@@ -131,7 +131,7 @@ import Cocoa
         guard let delay = delay else { return hideBlock() }
         
         let delayTime = DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.after(when: delayTime) {
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             hideBlock()
         }
     }
@@ -248,7 +248,7 @@ import Cocoa
         bottomConstraint.isActive = true
     }
     
-    override public func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == windowContentViewObserverContext {
             bringToFront()
         } else {

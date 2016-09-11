@@ -11,9 +11,9 @@ import Cocoa
 /// Defines the style of vibrancy to be used by a `GRStatusBar`
 public enum GRStatusBarStyle: String {
     /// Uses the vibrant light appearance and material
-    case Light
+    case light
     /// Uses the vibrant dark appearance and material
-    case Dark
+    case dark
     
     /// Gets the most appropriate style based on the appearance provided
     ///
@@ -34,9 +34,9 @@ public enum GRStatusBarStyle: String {
     
     var appearance: NSAppearance {
         switch self {
-        case .Light:
+        case .light:
             return NSAppearance(named: NSAppearanceNameVibrantLight)!
-        case .Dark:
+        case .dark:
             return NSAppearance(named: NSAppearanceNameVibrantDark)!
         }
     }
