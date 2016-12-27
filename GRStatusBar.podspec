@@ -4,7 +4,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "GRStatusBar"
-  s.version      = "1.0.4"
+  s.version      = "1.1.0"
   s.summary      = "Safari-like status bar for OS X apps."
   s.description  = <<-DESC
                    Safari-like status bar for OS X apps.
