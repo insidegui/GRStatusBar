@@ -14,7 +14,7 @@ import Cocoa
 @objc public class GRStatusBar: NSObject {
 
     /// The style used for the status bar vibrancy (Light or Dark)
-    public var style = GRStatusBarStyle.Light {
+    public var style = GRStatusBarStyle.light {
         didSet {
             guard backgroundView != nil else { return }
             
@@ -25,7 +25,7 @@ import Cocoa
     /// The color to use as the status bar's background (will have opacity reduced to keep translucency)
     public var backgroundColor: NSColor? {
         didSet {
-            tintView.backgroundColor = backgroundColor?.colorWithAlphaComponent(LayoutConstants.backgroundColorAlpha)
+            tintView.backgroundColor = backgroundColor?.withAlphaComponent(LayoutConstants.backgroundColorAlpha)
         }
     }
     
@@ -79,13 +79,13 @@ import Cocoa
     private var backgroundView: NSVisualEffectView!
     private var label: NSTextField!
     
-    private let windowContentViewObserverContext = UnsafeMutablePointer<Void>()
+    private let windowContentViewObserverContext: UnsafeMutableRawPointer? = nil
     init(window: NSWindow) {
         self.window = window
 
         super.init()
         
-        self.window.addObserver(self, forKeyPath: "contentView", options: [.Initial, .New], context: windowContentViewObserverContext)
+        self.window.addObserver(self, forKeyPath: "contentView", options: [.initial, .new], context: windowContentViewObserverContext)
         
         fixContentViewIfNeeded()
         buildViews()
@@ -108,8 +108,8 @@ import Cocoa
         }) {
             guard duration > 0.0 else { return }
             
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(duration * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
+            let delayTime = DispatchTime.now() + Double(Int64(duration * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
                 self.hide()
             }
         }
@@ -130,8 +130,10 @@ import Cocoa
         
         guard let delay = delay else { return hideBlock() }
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue(), hideBlock)
+        let delayTime = DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+            hideBlock()
+        }
     }
     
     private func fixContentViewIfNeeded() {
@@ -149,16 +151,16 @@ import Cocoa
         
         containerView = NSView(frame: defaultRect)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addConstraint(NSLayoutConstraint(item: containerView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: LayoutConstants.defaultHeight))
+        containerView.addConstraint(NSLayoutConstraint(item: containerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: LayoutConstants.defaultHeight))
         
         // Visual Effect View
         
         backgroundView = RoundedVisualEffectView(frame: defaultRect)
-        backgroundView.blendingMode = .WithinWindow
+        backgroundView.blendingMode = .withinWindow
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundView.material = .AppearanceBased
+        backgroundView.material = .appearanceBased
         backgroundView.appearance = style.appearance
-        backgroundView.state = .Active
+        backgroundView.state = .active
         containerView.addSubview(backgroundView)
         
         // Tint View
@@ -176,14 +178,14 @@ import Cocoa
         if let attributedText = attributedText {
             label.attributedStringValue = attributedText
         }
-        label.editable = false
-        label.selectable = false
-        label.bezeled = false
-        label.bordered = false
+        label.isEditable = false
+        label.isSelectable = false
+        label.isBezeled = false
+        label.isBordered = false
         label.drawsBackground = false
-        label.font = NSFont.systemFontOfSize(LayoutConstants.defaultFontSize)
+        label.font = NSFont.systemFont(ofSize: LayoutConstants.defaultFontSize)
         label.textColor = textColor
-        label.lineBreakMode = .ByTruncatingMiddle
+        label.lineBreakMode = .byTruncatingMiddle
         label.sizeToFit()
         backgroundView.addSubview(label)
         
@@ -193,28 +195,28 @@ import Cocoa
         backgroundView.setFrameSize(label.bounds.size)
         tintView.setFrameSize(label.bounds.size)
 
-        backgroundView.leadingAnchor.constraintEqualToAnchor(containerView.leadingAnchor).active = true
-        backgroundView.trailingAnchor.constraintEqualToAnchor(containerView.trailingAnchor).active = true
-        backgroundView.topAnchor.constraintEqualToAnchor(containerView.topAnchor).active = true
-        backgroundView.bottomAnchor.constraintEqualToAnchor(containerView.bottomAnchor).active = true
+        backgroundView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
+        backgroundView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
-        tintView.leadingAnchor.constraintEqualToAnchor(containerView.leadingAnchor).active = true
-        tintView.trailingAnchor.constraintEqualToAnchor(containerView.trailingAnchor).active = true
-        tintView.topAnchor.constraintEqualToAnchor(containerView.topAnchor).active = true
-        tintView.bottomAnchor.constraintEqualToAnchor(containerView.bottomAnchor).active = true
+        tintView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
+        tintView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
+        tintView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
+        tintView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
         // Constraint from label to visual effect view, LEFT with padding
-        let labelLeadingAnchor = label.leadingAnchor.constraintEqualToAnchor(backgroundView.leadingAnchor)
+        let labelLeadingAnchor = label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor)
         labelLeadingAnchor.constant = LayoutConstants.padding
-        labelLeadingAnchor.active = true
+        labelLeadingAnchor.isActive = true
         // Constraint from label to visual effect view, RIGHT with padding
-        let labelTrailingAnchor = label.trailingAnchor.constraintEqualToAnchor(backgroundView.trailingAnchor)
+        let labelTrailingAnchor = label.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor)
         labelTrailingAnchor.constant = -LayoutConstants.padding
-        labelTrailingAnchor.active = true
+        labelTrailingAnchor.isActive = true
         // Constraint to center label vertically inside visual effect view
-        let labelCenterAnchor = label.centerYAnchor.constraintEqualToAnchor(backgroundView.centerYAnchor)
+        let labelCenterAnchor = label.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor)
         labelCenterAnchor.constant = LayoutConstants.textYOffset
-        labelCenterAnchor.active = true
+        labelCenterAnchor.isActive = true
         
         // Start with the container hidden
         containerView.alphaValue = 0.0
@@ -238,19 +240,19 @@ import Cocoa
         
         contentView.addSubview(containerView)
         
-        let leadingConstraint = containerView.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor)
+        let leadingConstraint = containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
         leadingConstraint.constant = LayoutConstants.margin
-        leadingConstraint.active = true
-        let bottomConstraint = containerView.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor)
+        leadingConstraint.isActive = true
+        let bottomConstraint = containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         bottomConstraint.constant = -LayoutConstants.margin
-        bottomConstraint.active = true
+        bottomConstraint.isActive = true
     }
     
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == windowContentViewObserverContext {
             bringToFront()
         } else {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
     

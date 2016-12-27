@@ -9,7 +9,7 @@
 import Foundation
 
 struct LayoutConstants {
-    static let defaultTextColor = NSColor.secondaryLabelColor()
+    static let defaultTextColor = NSColor.secondaryLabelColor
     static let backgroundColorAlpha = CGFloat(0.3)
     static let defaultWidth = CGFloat(100.0)
     static let defaultHeight = CGFloat(20.0)

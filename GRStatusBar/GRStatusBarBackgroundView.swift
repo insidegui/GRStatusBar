@@ -12,12 +12,12 @@ class GRStatusBarBackgroundView: NSView {
     
     var backgroundColor: NSColor? {
         didSet {
-            setNeedsDisplayInRect(bounds)
+            setNeedsDisplay(bounds)
         }
     }
     
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
 
         guard let backgroundColor = backgroundColor else { return }
         

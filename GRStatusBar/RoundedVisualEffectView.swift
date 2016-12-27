@@ -21,10 +21,10 @@ class RoundedVisualEffectView: NSVisualEffectView {
     private func invalidateCornerImage() {
         cornerImage = NSImage(size: bounds.size)
         cornerImage.lockFocus()
-        NSColor.clearColor().setFill()
+        NSColor.clear.setFill()
         NSRectFill(bounds)
         NSBezierPath(roundedRect: bounds, xRadius: cornerRadius, yRadius: cornerRadius).addClip()
-        NSColor.whiteColor().setFill()
+        NSColor.white.setFill()
         NSRectFill(bounds)
         cornerImage.unlockFocus()
         
@@ -37,7 +37,7 @@ class RoundedVisualEffectView: NSVisualEffectView {
         invalidateCornerImage()
     }
     
-    override func setFrameSize(newSize: NSSize) {
+    override func setFrameSize(_ newSize: NSSize) {
         super.setFrameSize(newSize)
         
         invalidateCornerImage()
