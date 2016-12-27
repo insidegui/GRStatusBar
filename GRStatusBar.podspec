@@ -5,9 +5,9 @@
 Pod::Spec.new do |s|
   s.name         = "GRStatusBar"
   s.version      = "1.1.0"
-  s.summary      = "Safari-like status bar for OS X apps."
+  s.summary      = "Safari-like status bar for macOS apps."
   s.description  = <<-DESC
-                   Safari-like status bar for OS X apps.
+                   Safari-like status bar for macOS apps.
                    This adds a `statusBar` property to NSWindow, the easiest way to show a status message
                    is by just setting the `text` property on your window's `statusBar`.
                    

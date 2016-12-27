@@ -1,6 +1,10 @@
+If you want to support my open source projects financially, you can do so by purchasing a copy of [BrowserFreedom](https://getbrowserfreedom.com), [Mediunic](https://itunes.apple.com/app/mediunic-medium-client/id1088945121?mt=12) or sending Bitcoin to `3DH9B42m6k2A89hy1Diz3Vr3cpDNQTQCbJ` 😁
+
 # GRStatusBar
 
-Safari-like status bar for OS X apps.
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods](https://img.shields.io/cocoapods/v/GRStatusBar.svg)]()
+
+Safari-like status bar for macOS apps.
 
 This adds a `statusBar` property to NSWindow, the easiest way to show a status message is by just setting the `text` property on your window's `statusBar`.
 
@@ -12,9 +16,13 @@ This adds a `statusBar` property to NSWindow, the easiest way to show a status m
 
 ## Installing
 
-### IMPORTANT: If you're using Swift 3 
+### Using Carthage:
 
-Checkout the branch `swift3` if you're using Xcode 8 and Swift 3 on your project, this branch will be merged into master when Xcode 8 comes out of beta.
+Add the following line to your `Cartfile` and follow the [integration instructions for Carthage](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application):
+
+```
+github "insidegui/GRStatusBar" ~> 1.1
+```
 
 ### Using CocoaPods:
 
@@ -30,7 +38,3 @@ use_frameworks!
 ### Manually
 
 Just download the code and add `GRStatusBar.framework` to the `Embedded Binaries` section of your app's target config.
-
-## ❤️
-
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=insidegui&url=https://github.com/insidegui/GRStatusBar.git)
