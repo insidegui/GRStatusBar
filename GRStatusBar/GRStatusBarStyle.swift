@@ -20,15 +20,15 @@ public enum GRStatusBarStyle: String {
     /// You can use this to automatically match a window's appearance
     init(appearance: NSAppearance?) {
         guard let appearance = appearance else {
-            self.init(rawValue: "Light")!
+            self.init(rawValue: "light")!
             return
         }
         
         switch appearance.name {
         case NSAppearanceNameVibrantDark:
-            self.init(rawValue: "Dark")!
+            self.init(rawValue: "dark")!
         default:
-            self.init(rawValue: "Light")!
+            self.init(rawValue: "light")!
         }
     }
     
